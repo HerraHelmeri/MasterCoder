@@ -46,9 +46,9 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
   const remainingCount = Math.max(0, filteredFiles.length - visibleFiles.length);
 
   const updatePending = (path: string) => {
-    setPendingSelection(prev => (
+    setPendingSelection(prev =>
       prev.includes(path) ? prev.filter(item => item !== path) : [...prev, path]
-    ));
+    );
   };
 
   const applySelection = () => {
@@ -64,23 +64,26 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
     <div className="sticky bottom-4 z-20 px-5 pb-4">
       <div className="mx-auto w-full max-w-3xl">
         <div className="relative">
+
           {isPickerOpen && (
             <div className="absolute inset-x-3 bottom-full mb-3 z-50 rounded-2xl border border-neutral-700 bg-neutral-900 p-3 shadow-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <input
-                  type="text"
-                  value={query}
-                  onChange={e => setQuery(e.target.value)}
-                  placeholder="Filter files..."
-                  className="w-full bg-neutral-800 border border-neutral-700 text-neutral-100 placeholder-neutral-500 text-sm px-2 py-1 rounded-lg outline-none focus:border-neutral-500"
-                />
-              </div>
+              <input
+                type="text"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Filter files..."
+                className="w-full mb-2 bg-neutral-800 border border-neutral-700 text-neutral-100 placeholder-neutral-500 text-sm px-2 py-1 rounded-lg outline-none focus:border-neutral-500"
+              />
+
               <div className="max-h-48 overflow-y-auto text-sm text-neutral-200 space-y-1 pr-1">
                 {filteredFiles.length === 0 ? (
                   <div className="text-neutral-500">No matches.</div>
                 ) : (
                   visibleFiles.map(path => (
-                    <label key={path} className="flex items-center gap-2 cursor-pointer hover:text-white">
+                    <label
+                      key={path}
+                      className="flex items-center gap-2 cursor-pointer hover:text-white"
+                    >
                       <input
                         type="checkbox"
                         checked={pendingSelection.includes(path)}
@@ -100,9 +103,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
                   </div>
                 )}
               </div>
-              <div className="mt-2 text-[11px] text-neutral-500">
-                Showing recommended files. Type to search all indexed files.
-              </div>
+
               <div className="flex items-center justify-between mt-3">
                 <button
                   type="button"
@@ -111,7 +112,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
                 >
                   Clear
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setIsPickerOpen(false)}
@@ -131,18 +132,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             </div>
           )}
 
-          <div className="flex items-center gap-3 rounded-3xl border border-neutral-700 bg-neutral-800 px-4 py-3 shadow-md backdrop-blur-md">
-            <button
-              type="button"
-              onClick={togglePicker}
-              disabled={!hasProject}
-              className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-transparent"
-              aria-label="Add context files"
-              title={hasProject ? 'Add context files' : 'Open a project to add context'}
-            >
-              <Plus size={18} />
-            </button>
-
+          <div className="rounded-3xl border border-neutral-700 bg-neutral-800 px-3 py-3 shadow-md backdrop-blur-md">
             <input
               type="text"
               value={input}
@@ -154,20 +144,32 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
                 }
               }}
               placeholder="Ask about your code..."
-              className="flex-1 bg-transparent text-base text-neutral-100 placeholder-neutral-400 outline-none"
+              className="w-full bg-transparent text-base text-neutral-100 placeholder-neutral-400 outline-none px-3"
             />
 
-            <button
-              type="button"
-              onClick={onSend}
-              disabled={isSending || input.trim().length === 0}
-              className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-200 hover:text-white hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-transparent"
-              aria-label="Send message"
-              title="Send"
-            >
-              <SendHorizontal size={18} />
-            </button>
+            <div className="mt-2 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={togglePicker}
+                disabled={!hasProject}
+                className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-700 disabled:opacity-40"
+                aria-label="Add context files"
+              >
+                <Plus size={18} />
+              </button>
+
+              <button
+                type="button"
+                onClick={onSend}
+                disabled={isSending || input.trim().length === 0}
+                className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-200 hover:text-white hover:bg-neutral-700 disabled:opacity-40"
+                aria-label="Send message"
+              >
+                <SendHorizontal size={18} />
+              </button>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

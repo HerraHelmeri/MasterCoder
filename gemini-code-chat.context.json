@@ -1,0 +1,27 @@
+{
+  "projectRoot": "C:\\Users\\parta\\Desktop\\CodeAgent",
+  "projectSummary": "Project \"vs-code-web\".  Key dependencies: @monaco-editor/react, lucide-react, node-pty, react, react-dom, xterm, xterm-addon-fit.",
+  "fileSummaries": {
+    "C:\\Users\\parta\\Desktop\\CodeAgent\\README.md": {
+      "path": "C:\\Users\\parta\\Desktop\\CodeAgent\\README.md",
+      "summary": "Documentation/notes file.",
+      "updatedAt": 1767069812835
+    },
+    "C:\\Users\\parta\\Desktop\\CodeAgent\\package.json": {
+      "path": "C:\\Users\\parta\\Desktop\\CodeAgent\\package.json",
+      "summary": "Project manifest (scripts, dependencies).",
+      "updatedAt": 1767069812835
+    },
+    "C:\\Users\\parta\\Desktop\\CodeAgent\\tsconfig.json": {
+      "path": "C:\\Users\\parta\\Desktop\\CodeAgent\\tsconfig.json",
+      "summary": "Source file. Heuristic summary: contains ~0 exports; review for details.",
+      "updatedAt": 1767069812835
+    },
+    "C:\\Users\\parta\\Desktop\\CodeAgent\\vite.config.ts": {
+      "path": "C:\\Users\\parta\\Desktop\\CodeAgent\\vite.config.ts",
+      "summary": "Source file. Heuristic summary: contains ~1 exports; review for details.",
+      "updatedAt": 1767069812836
+    }
+  },
+  "recentDiffs": []
+}

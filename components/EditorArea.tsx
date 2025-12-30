@@ -94,7 +94,7 @@ export const EditorArea: React.FC<EditorAreaProps> = ({
     <div className="flex-1 flex flex-col bg-neutral-900 overflow-hidden min-w-0 relative">
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-0">
         <div
-          className="w-[420px] h-[420px] opacity-70 bg-neutral-950/20"
+          className="w-[240px] h-[240px] opacity-70 bg-neutral-950/20"
           style={{
             WebkitMaskImage: `url(${logo})`,
             maskImage: `url(${logo})`,

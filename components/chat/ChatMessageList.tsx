@@ -104,7 +104,7 @@ const ChatMessageItem: React.FC<ItemProps> = ({ message, shouldAnimate }) => {
   return (
     <div className="flex w-full text-base leading-relaxed text-neutral-100">
       <div
-        className={`rounded-2xl px-4 py-3 text-left ${
+        className={`rounded-3xl px-4 py-3 text-left ${
           isUser
             ? 'ml-auto bg-neutral-800 w-fit max-w-full'
             : 'mr-auto w-fit max-w-full'
@@ -150,7 +150,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ value, language }) => {
           {language}
         </div>
       )}
-      <div className="bg-neutral-800 rounded-2xl overflow-hidden">
+      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden">
         <pre className="p-3 text-sm text-neutral-100 overflow-x-auto pill-scrollbar">
           <code
             className="font-mono whitespace-pre"

@@ -1,6 +1,19 @@
-import React, { useState } from 'react';
-import { ChevronRight, ChevronDown, FileCode, Folder, FolderOpen, FileJson, FileType2, FileText } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  ChevronRight,
+  ChevronDown,
+  FileCode,
+  Folder,
+  FolderOpen,
+  FileJson,
+  Hash,
+  FileText,
+  Code
+} from 'lucide-react';
 import { FileSystemItem, FileType } from '../types';
+
+const INDENT_SIZE = 14;
+const ROW_HEIGHT = 'h-[22px]';
 
 interface FileTreeProps {
   items: FileSystemItem[];
@@ -12,60 +25,90 @@ interface FileTreeProps {
 }
 
 const getFileIcon = (name: string) => {
-  if (name.endsWith('.tsx') || name.endsWith('.ts')) return <FileCode size={16} className="text-blue-400" />;
-  if (name.endsWith('.css')) return <FileType2 size={16} className="text-blue-300" />;
-  if (name.endsWith('.json')) return <FileJson size={16} className="text-yellow-400" />;
-  if (name.endsWith('.md')) return <FileText size={16} className="text-gray-400" />;
-  return <FileText size={16} className="text-gray-400" />;
+   if (name.endsWith('.html') || name.endsWith('.ts'))
+    return <Code size={16} className="text-amber-500" />;
+  if (name.endsWith('.tsx') || name.endsWith('.ts'))
+    return <FileCode size={16} className="text-blue-400" />;
+  if (name.endsWith('.css'))
+    return <Hash size={16} className="text-blue-300" />;
+  if (name.endsWith('.json'))
+    return <FileJson size={16} className="text-yellow-400" />;
+  return <FileText size={16} className="text-neutral-400" />;
 };
 
-const FileTreeNode: React.FC<{
+interface FileTreeNodeProps {
   item: FileSystemItem;
   activeFileId: string | null;
   onFileClick: (file: FileSystemItem) => void;
   onContextMenu: (event: React.MouseEvent, item: FileSystemItem) => void;
-}> = ({ item, activeFileId, onFileClick, onContextMenu }) => {
-  const [isOpen, setIsOpen] = useState(item.depth === 0);
+}
 
-  const handleClick = (e: React.MouseEvent) => {
+const FileTreeNode: React.FC<FileTreeNodeProps> = ({
+  item,
+  activeFileId,
+  onFileClick,
+  onContextMenu
+}) => {
+  const [isOpen, setIsOpen] = useState(item.depth === 0);
+  const isSelected = activeFileId === item.id;
+
+  const paddingLeft = useMemo(
+    () => `${item.depth * INDENT_SIZE + 8}px`,
+    [item.depth]
+  );
+
+  const handleRowClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (item.type === FileType.FOLDER) {
-      setIsOpen(!isOpen);
+      setIsOpen((prev) => !prev);
     } else {
       onFileClick(item);
     }
   };
 
-  const isSelected = activeFileId === item.id;
-  const paddingLeft = `${(item.depth || 0) * 12 + 10}px`;
-
   return (
     <div>
       <div
-        className={`flex items-center py-[3px] cursor-pointer select-none hover:bg-neutral-800 transition-colors ${
-          isSelected ? 'bg-neutral-800 text-white' : 'text-neutral-300'
-        }`}
+        className={`group flex items-center ${ROW_HEIGHT} px-1 text-[13px] cursor-pointer select-none
+          ${
+            isSelected
+              ? 'bg-neutral-800 text-white'
+              : 'text-neutral-300 hover:bg-neutral-800'
+          }`}
         style={{ paddingLeft }}
-        onClick={handleClick}
-        onContextMenu={(event) => onContextMenu(event, item)}
+        onClick={handleRowClick}
+        onContextMenu={(e) => onContextMenu(e, item)}
       >
-        <span className="mr-1 shrink-0 flex items-center justify-center w-4">
-          {item.type === FileType.FOLDER && (
-            isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />
-          )}
-        </span>
-        <span className="mr-1.5 shrink-0">
+        {/* Chevron */}
+        <div className="w-4 flex items-center justify-center mr-1">
+          {item.type === FileType.FOLDER &&
+            (isOpen ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronRight size={14} />
+            ))}
+        </div>
+
+        {/* Icon */}
+        <div className="w-4 mr-2 flex items-center justify-center">
           {item.type === FileType.FOLDER ? (
-            isOpen ? <FolderOpen size={16} className="text-amber-300" /> : <Folder size={16} className="text-amber-300" />
+            isOpen ? (
+              <FolderOpen size={16} className="text-amber-300" />
+            ) : (
+              <Folder size={16} className="text-amber-300" />
+            )
           ) : (
             getFileIcon(item.name)
           )}
-        </span>
-        <span className="truncate text-[13px] flex-1">{item.name}</span>
+        </div>
+
+        {/* Name */}
+        <span className="truncate flex-1">{item.name}</span>
       </div>
-      
+
+      {/* Children */}
       {item.type === FileType.FOLDER && isOpen && item.children && (
-        <div>
+        <div className="border-l border-neutral-800 ml-[10px]">
           {item.children.map((child) => (
             <FileTreeNode
               key={child.id}
@@ -95,48 +138,38 @@ export const FileTree: React.FC<FileTreeProps> = ({
     item: FileSystemItem;
   } | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!contextMenu) return;
-    const handleClose = () => setContextMenu(null);
-    const handleKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setContextMenu(null);
-    };
-    window.addEventListener('click', handleClose);
-    window.addEventListener('scroll', handleClose, true);
-    window.addEventListener('keydown', handleKey);
+
+    const close = () => setContextMenu(null);
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && close();
+
+    window.addEventListener('click', close);
+    window.addEventListener('scroll', close, true);
+    window.addEventListener('keydown', esc);
+
     return () => {
-      window.removeEventListener('click', handleClose);
-      window.removeEventListener('scroll', handleClose, true);
-      window.removeEventListener('keydown', handleKey);
+      window.removeEventListener('click', close);
+      window.removeEventListener('scroll', close, true);
+      window.removeEventListener('keydown', esc);
     };
   }, [contextMenu]);
 
-  const handleContextMenu = (event: React.MouseEvent, item: FileSystemItem) => {
+  const handleContextMenu = (
+    event: React.MouseEvent,
+    item: FileSystemItem
+  ) => {
     event.preventDefault();
     event.stopPropagation();
-    setContextMenu({ x: event.clientX, y: event.clientY, item });
-  };
 
-  const handleRename = () => {
-    if (!contextMenu) return;
-    onRenameItem(contextMenu.item);
-    setContextMenu(null);
-  };
+    const x = Math.min(event.clientX, window.innerWidth - 180);
+    const y = Math.min(event.clientY, window.innerHeight - 120);
 
-  const handleCopy = () => {
-    if (!contextMenu) return;
-    onCopyItem(contextMenu.item);
-    setContextMenu(null);
-  };
-
-  const handleDelete = () => {
-    if (!contextMenu) return;
-    onDeleteItem(contextMenu.item);
-    setContextMenu(null);
+    setContextMenu({ x, y, item });
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full text-sm">
       {items.map((item) => (
         <FileTreeNode
           key={item.id}
@@ -146,34 +179,42 @@ export const FileTree: React.FC<FileTreeProps> = ({
           onContextMenu={handleContextMenu}
         />
       ))}
+
       {contextMenu && (
         <div
-          className="fixed z-50 min-w-[160px] rounded-md border border-neutral-700 bg-neutral-900 shadow-xl"
+          className="fixed z-50 min-w-[160px] rounded-lg border border-neutral-800 bg-neutral-900 shadow-md backdrop-blur overflow-hidden"
           style={{ left: contextMenu.x, top: contextMenu.y }}
         >
-          <button
-            type="button"
-            onClick={handleRename}
-            className="w-full text-left text-xs px-3 py-2 text-neutral-200 hover:bg-neutral-800"
-          >
+          <MenuItem onClick={() => onRenameItem(contextMenu.item)}>
             Rename
-          </button>
-          <button
-            type="button"
-            onClick={handleCopy}
-            className="w-full text-left text-xs px-3 py-2 text-neutral-200 hover:bg-neutral-800"
-          >
+          </MenuItem>
+          <MenuItem onClick={() => onCopyItem(contextMenu.item)}>
             Copy
-          </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="w-full text-left text-xs px-3 py-2 text-red-300 hover:bg-neutral-800"
-          >
+          </MenuItem>
+          <MenuItem danger onClick={() => onDeleteItem(contextMenu.item)}>
             Delete
-          </button>
+          </MenuItem>
         </div>
       )}
     </div>
   );
 };
+
+const MenuItem: React.FC<{
+  children: React.ReactNode;
+  onClick: () => void;
+  danger?: boolean;
+}> = ({ children, onClick, danger }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`w-full text-left px-3 py-2 text-xs transition-colors
+      ${
+        danger
+          ? 'text-red-300 hover:bg-neutral-800'
+          : 'text-neutral-200 hover:bg-neutral-800'
+      }`}
+  >
+    {children}
+  </button>
+);

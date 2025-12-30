@@ -267,6 +267,7 @@ export default function App() {
   const [codeModalContent, setCodeModalContent] = useState('');
   const [codeModalDirty, setCodeModalDirty] = useState(false);
   const [codeModalLoading, setCodeModalLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<FileSystemItem | null>(null);
   const [createDraft, setCreateDraft] = useState<{
     kind: 'file' | 'folder';
     name: string;
@@ -382,6 +383,17 @@ export default function App() {
     });
   };
 
+  useEffect(() => {
+    if (!deleteTarget) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setDeleteTarget(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [deleteTarget]);
+
   const renameItem = async (item: FileSystemItem) => {
     if (!item.path) return;
     const currentName = getFileName(item.path);
@@ -448,12 +460,9 @@ export default function App() {
     await refreshTree();
   };
 
-  const deleteItem = async (item: FileSystemItem) => {
+  const performDelete = async (item: FileSystemItem) => {
     if (!item.path) return;
-    const confirmed = window.confirm(`Delete ${item.type === FileType.FOLDER ? 'folder' : 'file'} "${item.name}"?`);
-    if (!confirmed) return;
     await window.api.deletePath(item.path);
-
     setTabs(prev => prev.filter(tab => !isPathWithin(tab.path, item.path)));
     setActiveFileId(prev => {
       if (!prev) return prev;
@@ -467,6 +476,18 @@ export default function App() {
     });
 
     await refreshTree();
+  };
+
+  const deleteItem = async (item: FileSystemItem) => {
+    if (!item.path) return;
+    setDeleteTarget(item);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    const target = deleteTarget;
+    setDeleteTarget(null);
+    await performDelete(target);
   };
 
   const contextMenuFiles = useMemo(() => {
@@ -698,6 +719,41 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {deleteTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black backdrop-blur-sm px-6"
+          onClick={() => setDeleteTarget(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl border border-neutral-800 bg-neutral-900 shadow-lg"
+            onClick={event => event.stopPropagation()}
+          >
+            <div className="px-5 py-4 border-b border-neutral-800 bg-neutral-950">
+              <h2 className="text-sm font-semibold text-neutral-100">Delete {deleteTarget.type === FileType.FOLDER ? 'folder' : 'file'}</h2>
+              <p className="mt-1 text-xs text-neutral-400">
+                This will permanently remove "{deleteTarget.name}".
+              </p>
+            </div>
+            <div className="px-5 py-4 flex items-center justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                className="px-3 py-1.5 text-xs rounded-md text-neutral-300 hover:text-white hover:bg-neutral-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                className="px-3 py-1.5 text-xs rounded-md bg-rose-600 text-rose-50 hover:bg-rose-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

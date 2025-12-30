@@ -65,7 +65,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
       <div className="mx-auto w-full max-w-3xl">
         <div className="relative">
           {isPickerOpen && (
-            <div className="absolute inset-x-3 bottom-full mb-3 z-50 rounded-2xl border border-neutral-700 bg-neutral-900 p-3 shadow-xl">
+            <div className="absolute inset-x-3 bottom-full mb-3 z-50 rounded-2xl border border-neutral-700 bg-neutral-900 p-3 shadow-lg">
               <div className="flex items-center gap-2 mb-2">
                 <input
                   type="text"
@@ -87,7 +87,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
                         onChange={() => updatePending(path)}
                         className="sr-only peer"
                       />
-                      <span className="h-4 w-4 rounded border border-neutral-600 bg-neutral-800 flex items-center justify-center peer-checked:border-sky-400 peer-checked:bg-sky-500/20">
+                      <span className="h-4 w-4 rounded border border-neutral-600 bg-neutral-800 flex items-center justify-center peer-checked:border-sky-400 peer-checked:bg-sky-600">
                         <Check size={12} className="text-sky-300 opacity-0 peer-checked:opacity-100" />
                       </span>
                       <span className="truncate">{path}</span>
@@ -131,12 +131,12 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
             </div>
           )}
 
-          <div className="flex items-center gap-3 rounded-3xl border border-neutral-700/70 bg-neutral-800 px-4 py-3 shadow-md">
+          <div className="flex items-center gap-3 rounded-3xl border border-neutral-700 bg-neutral-800 px-4 py-3 shadow-md backdrop-blur-md">
             <button
               type="button"
               onClick={togglePicker}
               disabled={!hasProject}
-              className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-700/70 disabled:opacity-40 disabled:hover:bg-transparent"
+              className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-300 hover:text-white hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-transparent"
               aria-label="Add context files"
               title={hasProject ? 'Add context files' : 'Open a project to add context'}
             >
@@ -161,7 +161,7 @@ export const ChatInputArea: React.FC<ChatInputAreaProps> = ({
               type="button"
               onClick={onSend}
               disabled={isSending || input.trim().length === 0}
-              className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-200 hover:text-white hover:bg-neutral-700/70 disabled:opacity-40 disabled:hover:bg-transparent"
+              className="h-9 w-9 rounded-full flex items-center justify-center text-neutral-200 hover:text-white hover:bg-neutral-700 disabled:opacity-40 disabled:hover:bg-transparent"
               aria-label="Send message"
               title="Send"
             >

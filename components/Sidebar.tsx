@@ -125,7 +125,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {activeView === ActivityView.EXPLORER && (
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="px-4 py-1 text-[11px] font-semibold text-neutral-200 flex items-center bg-neutral-800 border-b border-neutral-700 shadow-sm mb-1 cursor-pointer">
+          <div className="px-4 py-1 text-[11px] font-semibold text-neutral-200 flex items-center bg-neutral-900 border-b border-neutral-800 shadow-sm mb-1 cursor-pointer">
             {rootName}
           </div>
           {createDraft && (
@@ -255,4 +255,3 @@ export const Sidebar: React.FC<SidebarProps> = ({
     </div>
   );
 };
-

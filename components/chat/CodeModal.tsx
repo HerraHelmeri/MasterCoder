@@ -46,8 +46,8 @@ export const CodeModal: React.FC<{
   if (!codeModal.isOpen) return null;
 
   return (
-    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-6 md:px-10">
-      <div className="w-[min(1100px,92vw)] h-[min(80vh,900px)] bg-neutral-900 border border-neutral-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black backdrop-blur-sm px-6 md:px-10">
+      <div className="w-[min(1100px,92vw)] h-[min(80vh,900px)] bg-neutral-900 border border-neutral-800 rounded-3xl shadow-lg flex flex-col overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-800 bg-neutral-950">
           <div className="text-sm text-neutral-200">
             View Code: {codeModal.fileName || 'Untitled'}
@@ -57,14 +57,14 @@ export const CodeModal: React.FC<{
               type="button"
               onClick={onSave}
               disabled={codeModal.isLoading || !codeModal.isDirty}
-              className="px-3 py-1.5 text-xs rounded-md bg-neutral-800 text-neutral-200 hover:bg-neutral-700 disabled:opacity-50"
+              className="px-3 py-1.5 text-xs rounded-md bg-emerald-600 text-emerald-50 hover:bg-emerald-700 disabled:opacity-50"
             >
               Save
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1.5 text-xs rounded-md bg-neutral-700 text-neutral-100 hover:bg-neutral-600"
+              className="px-3 py-1.5 text-xs rounded-md bg-rose-600 text-rose-50 hover:bg-rose-700"
             >
               Close
             </button>

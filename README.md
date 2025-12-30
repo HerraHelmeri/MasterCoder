@@ -1,20 +1,50 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# CodeAgent
 
-# Run and deploy your AI Studio app
+CodeAgent is a desktop AI code workspace built with Electron. It pairs a VS Code-style file explorer with a chat assistant, file context picker, and a Monaco-based code viewer/editor.
 
-This contains everything you need to run your app locally.
+## Highlights
 
-View your app in AI Studio: https://ai.studio/apps/temp/1
+- Explorer with create, rename, copy, and delete actions
+- Chat UI with code blocks, syntax highlighting, and a thinking indicator
+- Floating prompt bar aligned to the message area
+- Context selection for model prompts
+- Monaco modal editor for viewing/editing files
 
-## Run Locally
+## Stack
 
-**Prerequisites:**  Node.js
+- Electron
+- React + TypeScript
+- Vite + Tailwind (CDN)
+- Monaco Editor
 
+## Setup
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Requirements:
+- Node.js 18+
+
+Install:
+```
+npm install
+```
+
+Configure Gemini:
+- Create or edit `.env.local`
+- Add `GEMINI_API_KEY=your_key_here`
+
+Run:
+```
+npm run dev
+```
+
+## Commands
+
+```
+npm run dev
+npm run build
+npm run preview
+```
+
+## Notes
+
+- File operations are restricted to the selected workspace root.
+- TypeScript diagnostics follow your `tsconfig.json` when present.
